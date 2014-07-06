@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Stylish</string>
+
+    <string name="managestyles">Manage styles</string>
+    <string name="disableallstyles">Disable all styles</string>
+    <string name="findstyles">Find styles for current site</string>
+    <string name="about">This Add-on MUST be used with “Dolphin Browser” which is available on Google Play.</string>
+    <string name="description">User styles are themes for web sites. User styles empower your browsing experience by letting you customize web sites. Take out irrelevant content, change colors, or completely redesign the entire site. This addon has the same functions as the Stylish for Firefox and Chrome on a PC.</string>
+    <string name="disable">Disable</string>
+    <string name="enable">Enable</string>
+    <string name="delete">Delete</string>
+    <string name="affects">Affects</string>
+    <string name="alltheweb">all the Web</string>
+    <string name="enableallstyles">Enable all styles</string>
+    <string name="edit">Edit</string>
+    <string name="name">Name</string>
+    <string name="save">Save</string>
+    <string name="update">Update</string>
+    <string name="trouble">Trouble with file writing. Try one more time.</string>
+</resources>

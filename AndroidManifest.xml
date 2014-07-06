@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="ru.pmmlabs.stylish"
+    android:versionCode="3"
+    android:versionName="1.1" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
+    <uses-permission android:name="com.dolphin.browser.permission.ACCESS_WEB_PAGES"/>
+    <uses-permission android:name="com.dolphin.browser.permission.RUN_JAVASCRIPT"/>
+    <uses-permission android:name="com.dolphin.browser.permission.MANAGE_TABS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    
+    <supports-screens
+	android:largeScreens="true"
+	android:normalScreens="true"
+	android:requiresSmallestWidthDp="400"
+	android:smallScreens="true"
+	android:xlargeScreens="true" />
+	
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" 
+        android:allowBackup="true">
+        <activity
+            android:name="ru.pmmlabs.stylish.AboutActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+		<action android:name="android.intent.action.MAIN" />
+		<category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="ru.pmmlabs.stylish.CustomAboutActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <service android:name="ru.pmmlabs.stylish.StylishAddonService">
+            <intent-filter>
+                <action android:name="com.dolphin.browser.action.addonservice" />
+            </intent-filter>
+            <meta-data android:name="dolphin_api_key" android:value="qItGe+iHPl1+PM6mbxCWIddZw14qgMTppHH8og2JF74aLnSm+xvYrPUml5uE9Cyh34gl66xLAdHOTDk1r24r3C8qO90pGBNan+IB57usSXyqah1+6d069b9oE0TOH2DJ+HqJhIeO+tg9f7dIEutni94p7/vDReWMyDwrDilucyk="/>
+        </service>
+        <activity android:name="StylishDialog" android:theme="@android:style/Theme.Dialog"/> 
+        <activity android:name="StyleManager"/>
+        <activity android:name="StyleEditor"/>
+    </application>
+
+</manifest>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+     <string name="app_name">Stylish</string>
+    
+    <string name="managestyles">Управление стилями</string>
+    <string name="disableallstyles">Отключить все стили</string>
+    <string name="findstyles">Найти стили для текущего сайта</string>
+    <string name="about">Это дополнение ДОЛЖНО использоваться с “Dolphin Browser”, который вы можете найти на Google Play.</string>
+    <string name="description">Пользовательские стили - это темы для веб-сайтов. Пользовательские стили расширияют возможности просмотра веб-страниц, позволяя настроить внешний вид сайтов. Уберите ненужное содержимое, поменяйте цвета или полностью переоформите весь сайт. Данное дополнение выполняет те же функции, что и Stylish для браузеров Firefox и Chrome на обычном компьютере.</string>
+    <string name="disable">Отключить</string>
+    <string name="enable">Включить</string>
+    <string name="delete">Удалить</string>
+    <string name="affects">Влияет на</string>
+    <string name="alltheweb">весь интернет</string>
+    <string name="enableallstyles">Включить все стили</string>
+    <string name="edit">Правка</string>
+    <string name="name">Название</string>
+    <string name="save">Сохранить</string>
+    <string name="update">Обновить</string>
+     <string name="trouble">Проблема с записью файла. Попробуйте ещё разок.</string>
+</resources>
