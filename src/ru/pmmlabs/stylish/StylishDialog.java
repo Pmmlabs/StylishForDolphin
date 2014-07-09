@@ -40,7 +40,7 @@ public class StylishDialog extends Activity {
 		super.onCreate(savedInstanceState);			
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		final StylishAddonService StylishAddon = StylishAddonService.getInstance();
-		if (StylishAddon == null) {
+		if (StylishAddon == null || StylishAddon.currentStyles == null) {
 			Toast.makeText(getApplicationContext(), "Dolphin Browser is not connected. Please, restart browser.", Toast.LENGTH_SHORT).show();
 			return;
 		}
