@@ -177,10 +177,10 @@ public class StylishAddonService extends AddonService {
 								+ "instButtonAppend();"
 								+ "s.setAttribute('class','install-status install');"
 								+ "s.id='style-install-mobile-dolphin-android';"
-								+ "s.innerHTML='<span class=\"install-symbol\">+</span>Install with Stylish';"
+								+ "s.innerHTML='<span class=\"install-symbol\">+</span>"+getString(R.string.install)+"';"
 								+ "function getOptions(e){var t=document.getElementById(\"style-options\");if(!t){return[]}var n=t.getElementsByTagName(\"select\");var r=[];for(var i=0;i<n.length;i++){r.push([n[i].name,n[i].value])}var s=[];var o=t.querySelectorAll(\"input[type='text']\");for(var i=0;i<o.length;i++){if(o[i].value==\"\"){s.push(o[i])}else{r.push([o[i].name,o[i].value])}}o=t.querySelectorAll(\"input[type='radio']:checked\");for(var i=0;i<o.length;i++){switch(o[i].value){case\"user-url\":var u=o[i].name.split(\"-\");var a=\"option-user-url-\"+u[u.length-1];var f=document.getElementById(a);if(f.value==\"\"){s.push(f.parentNode)}else{r.push([o[i].name,f.value])}break;case\"user-upload\":var u=o[i].name.split(\"-\");var a=\"option-user-upload-\"+u[u.length-1];var f=document.getElementById(a);if(!f.uploadedData){s.push(f.parentNode)}else{r.push([o[i].name,f.uploadedData])}break;default:r.push([o[i].name,o[i].value]);break}}if(s.length>0){if(e){alert(\"Choose a value for every setting first.\");s[0].scrollIntoView();setTimeout(function(){for(var e=0;e<s.length;e++){new Effect.Highlight(s[e],{endcolor:\"#7CCD7C\"})}},500)}return null}return r}function toQueryString(e){return e.map(function(e){return e[0]+\"=\"+encodeURIComponent(e[1])}).join(\"&\")}" // from site's JS.
 								+ "s.addEventListener('click', function() {" 
-								/******/+ "this.innerHTML='Installing...';"
+								/******/+ "this.innerHTML='"+getString(R.string.installing)+"...';"
 								///******/+ "dolphinStylish.invoke(0,JSON.stringify({" //for IJavascriptInterface
 								/******/+ "document.title = JSON.stringify({"
 								/***********/+ "homepage:location.href,"
@@ -378,10 +378,10 @@ public class StylishAddonService extends AddonService {
 						msg = installStyleFromString(homepage, styleName, code.toString(), installUrl);
 					} catch (Exception e) {
 						Log.e(LOG_TAG, e.toString());
-						msg = "Problem while downloading";
+						msg = getString(R.string.problemwhiledownloading);
 					}					
 				} else
-					msg = "Please, insert SD card!";
+					msg = getString(R.string.insertsd);
 				try {
 					browser.tabs.getCurrent().getWebView().loadUrl(
 							"javascript:document.getElementById('style-install-mobile-dolphin-android').innerHTML='"+msg+"';");
