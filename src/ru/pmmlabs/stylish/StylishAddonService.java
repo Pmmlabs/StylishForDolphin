@@ -99,7 +99,7 @@ public class StylishAddonService extends AddonService {
 	};
 	
 	// auxiliary functions //
-	private String href2domain(String href) {
+	public String href2domain(String href) {
 		if (href == null) return "";
 		int domainStartPosition = href.indexOf("://")+3; // webview.getUrl() returns http://...
 		int domainEndPosition = href.indexOf("/", domainStartPosition);

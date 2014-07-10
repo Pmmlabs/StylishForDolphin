@@ -23,4 +23,5 @@
     <string name="installing">Installing</string>
     <string name="problemwhiledownloading">Problem while downloading</string>
     <string name="insertsd">Please, insert SD card!</string>
+    <string name="createstyle">Create style for</string>
 </resources>

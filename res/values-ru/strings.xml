@@ -23,4 +23,5 @@
     <string name="installing">Установка</string>
     <string name="problemwhiledownloading">Проблема при загрузке</string>
     <string name="insertsd">Пожалуйста, вставьте карту памяти!</string>
+    <string name="createstyle">Создать стиль для</string>
 </resources>

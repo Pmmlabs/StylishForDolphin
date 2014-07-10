@@ -20,6 +20,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -36,8 +37,8 @@ public class StylishDialog extends Activity {
 		setTheme(android.R.style.Theme_Holo_Dialog);
 	}
 	@Override
-	public void onCreate(Bundle savedInstanceState) {		
-		super.onCreate(savedInstanceState);			
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		final StylishAddonService StylishAddon = StylishAddonService.getInstance();
 		if (StylishAddon == null || StylishAddon.currentStyles == null) {
@@ -51,16 +52,27 @@ public class StylishDialog extends Activity {
 			Log.e(LOG_TAG , e.toString());
 		}
 		settheme(); // for new OS set Holo theme
-		setContentView(R.layout.complex_dialog);		
+		setContentView(R.layout.complex_dialog);
 		LinearLayout linear = (LinearLayout) findViewById(R.id.linear);
 		((CompoundButton)findViewById(R.id.btnDisable)).setChecked(StylishAddon.AddonEnabled);
-
+		
+		// for "create style" function
+		String curUrl = null;
+		try {
+			curUrl = browser.tabs.getCurrent().getWebView().getUrl();
+		} catch (RemoteException e) {
+			Log.e(LOG_TAG , e.toString());
+		}
+		final String curDomain = StylishAddon.href2domain(curUrl);
+		((Button)findViewById(R.id.btnCreate)).setText(((Button)findViewById(R.id.btnCreate)).getText()+" "+curDomain);
+		//
+		
 		if (currentStyles != null) 
 			for (final String style : currentStyles.keySet())
 			{
 				CheckBox cbx = new CheckBox(this);
 				cbx.setText(style);
-				cbx.setChecked(currentStyles.get(style));				
+				cbx.setChecked(currentStyles.get(style));
 				cbx.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					@Override
@@ -111,6 +123,19 @@ public class StylishDialog extends Activity {
 					Log.e(LOG_TAG, e.toString());
 				}
 				finish();
+			}
+		});
+		
+		findViewById(R.id.btnCreate).setOnClickListener(new View.OnClickListener() { // Click on "Create style"
+			
+			@Override
+			public void onClick(View arg0) {
+				Intent intent = new Intent(StylishDialog.this, StyleEditor.class);
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				intent.putExtra(StyleEditor.EXTRA_STYLE_NAME, curDomain);
+				intent.putExtra(StyleEditor.EXTRA_STYLE_HOMEPAGE, "");
+				intent.putExtra(StyleEditor.EXTRA_STYLE_UPDATE, "");
+				startActivity (intent);					
 			}
 		});
 	}

@@ -59,48 +59,54 @@ public class StyleEditor extends Activity {
 		Map<String, Integer> rTypes = StylishAddon.rulesTypes;
 		SQLiteDatabase db = StylishAddon.sbHelper.getReadableDatabase();
 
-		Cursor cursor = db.query(StylesTable.TABLE_NAME + " s JOIN " + RulesTable.TABLE_NAME + " r ON s." + StylesTable._ID
-				+ "=r." + RulesTable.COLUMN_NAME_STYLE_ID,
-				new String[] { StylesTable.COLUMN_NAME_FILENAME,
-				"group_concat(CASE "+RulesTable.COLUMN_NAME_RULE_TYPE
-				   +" WHEN "+rTypes.get("domain") +		" THEN 'domain(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
-				   +" WHEN "+rTypes.get("url-prefix") +	" THEN 'url-prefix(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
-				   +" WHEN "+rTypes.get("regexp") +		" THEN 'regexp(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
-				   +" ELSE 'url(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")' END, ', ') AS rules"
-				},
-				StylesTable.COLUMN_NAME_NAME + " = ?",
-				new String[] { styleName }, StylesTable.COLUMN_NAME_FILENAME, null, null);
-		if (cursor.moveToFirst()) {
-			do {
-			    StringBuilder contents = new StringBuilder();			    
-			    try {			     
-			      BufferedReader input =  new BufferedReader(new FileReader(
-			    		  StylishAddon.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
-			    		  +"/"+cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME))+ ".css"));
-			      try {
-			        String line = null; 
-			        while (( line = input.readLine()) != null){
-			          contents.append(line);
-			          contents.append(System.getProperty("line.separator"));
-			        }
-			      }
-			      finally {
-			        input.close();
-			      }
-			    }
-			    catch (IOException ex){
-			      Log.e(LOG_TAG,ex.toString());
-			    }
-	
-				edCode.setText(edCode.getText() + System.getProperty("line.separator")
-						+"@-moz-document " + cursor.getString(cursor.getColumnIndexOrThrow("rules")) +" {"+System.getProperty("line.separator")
-						+ contents.toString() + "}"+System.getProperty("line.separator")
-						);	
-			} while (cursor.moveToNext());
+		if (homepage.equals("")) {	// style creation case
+			edCode.setText(edCode.getText()+"@-moz-document domain(\"" + styleName +"\") {"
+						+System.getProperty("line.separator")+System.getProperty("line.separator")
+						+ "}"+System.getProperty("line.separator"));
+		} else {
+			Cursor cursor = db.query(StylesTable.TABLE_NAME + " s JOIN " + RulesTable.TABLE_NAME + " r ON s." + StylesTable._ID
+					+ "=r." + RulesTable.COLUMN_NAME_STYLE_ID,
+					new String[] { StylesTable.COLUMN_NAME_FILENAME,
+					"group_concat(CASE "+RulesTable.COLUMN_NAME_RULE_TYPE
+					   +" WHEN "+rTypes.get("domain") +		" THEN 'domain(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
+					   +" WHEN "+rTypes.get("url-prefix") +	" THEN 'url-prefix(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
+					   +" WHEN "+rTypes.get("regexp") +		" THEN 'regexp(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")'"
+					   +" ELSE 'url(\"' || "+RulesTable.COLUMN_NAME_RULE_TEXT+" || '\")' END, ', ') AS rules"
+					},
+					StylesTable.COLUMN_NAME_NAME + " = ?",
+					new String[] { styleName }, StylesTable.COLUMN_NAME_FILENAME, null, null);
+			if (cursor.moveToFirst()) {
+				do {
+				    StringBuilder contents = new StringBuilder();			    
+				    try {			     
+				      BufferedReader input =  new BufferedReader(new FileReader(
+				    		  StylishAddon.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
+				    		  +"/"+cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME))+ ".css"));
+				      try {
+				        String line = null; 
+				        while (( line = input.readLine()) != null){
+				          contents.append(line);
+				          contents.append(System.getProperty("line.separator"));
+				        }
+				      }
+				      finally {
+				        input.close();
+				      }
+				    }
+				    catch (IOException ex){
+				      Log.e(LOG_TAG,ex.toString());
+				    }
+		
+					edCode.setText(edCode.getText() + System.getProperty("line.separator")
+							+"@-moz-document " + cursor.getString(cursor.getColumnIndexOrThrow("rules")) +" {"+System.getProperty("line.separator")
+							+ contents.toString() + "}"+System.getProperty("line.separator")
+							);
+				} while (cursor.moveToNext());
+			}
+			cursor.close();
+			db.close();
 		}
-		cursor.close();
-		db.close();
-
+		
 		findViewById(R.id.btnCancel).setOnClickListener(new OnClickListener() { // click to "Cancel" button			
 			@Override
 			public void onClick(View arg0) {

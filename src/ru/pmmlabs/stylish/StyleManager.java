@@ -26,7 +26,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
+//experimental//import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -90,13 +91,16 @@ public class StyleManager extends Activity {
 					
 					@Override
 					public void onClick(View v) {
+						if (homepage != "")
 						try {
 							StylishAddon.browser.tabs.create(homepage, false);
 						} catch (RemoteException e) {
 							Log.e(LOG_TAG, e.toString());
-						} catch (IllegalArgumentException e) {							
+						} catch (IllegalArgumentException e) {
 							Log.e(LOG_TAG, e.toString());
 						}
+						else
+							Toast.makeText(getApplicationContext(), "This style has no homepage..", Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				});
@@ -106,7 +110,7 @@ public class StyleManager extends Activity {
 				
 				Button btnEdit = new Button(this);
 				btnEdit.setLayoutParams(buttonParams);
-				btnEdit.setText(getString(R.string.edit));				
+				btnEdit.setText(getString(R.string.edit));
 				btnEdit.setOnClickListener(new OnClickListener() { // edit style
 
 					@Override
@@ -122,13 +126,15 @@ public class StyleManager extends Activity {
 				
 				Button btnUpdate = new Button(this);
 				btnUpdate.setLayoutParams(buttonParams);
-				btnUpdate.setText(getString(R.string.update));				
+				btnUpdate.setText(getString(R.string.update));
 				btnUpdate.setOnClickListener(new OnClickListener() { // update style
 
 					@Override
 					public void onClick(View v) {
-						StylishAddon.installStyleFromUrl(homepage, name, updateURL);
-						title.setTextColor(android.graphics.Color.GREEN);						
+						if (updateURL != "") {
+							StylishAddon.installStyleFromUrl(homepage, name, updateURL);
+							title.setTextColor(android.graphics.Color.GREEN);
+						}
 					}					
 				});
 				
