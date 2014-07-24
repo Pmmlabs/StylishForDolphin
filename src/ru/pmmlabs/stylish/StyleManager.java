@@ -132,7 +132,7 @@ public class StyleManager extends Activity {
 					@Override
 					public void onClick(View v) {
 						if (updateURL != "") {
-							StylishAddon.installStyleFromUrl(homepage, name, updateURL);
+							StylishAddon.installStyleFromUrl(updateURL);
 							title.setTextColor(android.graphics.Color.GREEN);
 						}
 					}					

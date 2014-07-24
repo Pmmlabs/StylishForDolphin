@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.pmmlabs.stylish.StylesBaseContract.RulesTable;
@@ -166,34 +166,29 @@ public class StylishAddonService extends AddonService {
 					db.close();
 	
 					///////// add "Install" button			
+					final char SPECIAL_SYMBOL = '{';
 					if (Pattern.matches("https?://userstyles\\.org/styles/\\d+\\S*",href)){
-						if (webView.getTitle().charAt(0) != '{') oldTitle = webView.getTitle();
-						webView.loadUrl("javascript:var s=document.createElement('div');"
-								+ "function instButtonAppend(){"
-								+ "var p=document.getElementById('main-style-info');"
-								+ "if (p) {"
-								+ "p.removeChild(document.getElementById('style-install-unknown'));"
-								+ "p.appendChild(s);} else setTimeout(instButtonAppend,300);}"
-								+ "instButtonAppend();"
-								+ "s.setAttribute('class','install-status install');"
-								+ "s.id='style-install-mobile-dolphin-android';"
-								+ "s.innerHTML='<span class=\"install-symbol\">+</span>"+getString(R.string.install)+"';"
-								+ "function getOptions(e){var t=document.getElementById(\"style-options\");if(!t){return[]}var n=t.getElementsByTagName(\"select\");var r=[];for(var i=0;i<n.length;i++){r.push([n[i].name,n[i].value])}var s=[];var o=t.querySelectorAll(\"input[type='text']\");for(var i=0;i<o.length;i++){if(o[i].value==\"\"){s.push(o[i])}else{r.push([o[i].name,o[i].value])}}o=t.querySelectorAll(\"input[type='radio']:checked\");for(var i=0;i<o.length;i++){switch(o[i].value){case\"user-url\":var u=o[i].name.split(\"-\");var a=\"option-user-url-\"+u[u.length-1];var f=document.getElementById(a);if(f.value==\"\"){s.push(f.parentNode)}else{r.push([o[i].name,f.value])}break;case\"user-upload\":var u=o[i].name.split(\"-\");var a=\"option-user-upload-\"+u[u.length-1];var f=document.getElementById(a);if(!f.uploadedData){s.push(f.parentNode)}else{r.push([o[i].name,f.uploadedData])}break;default:r.push([o[i].name,o[i].value]);break}}if(s.length>0){if(e){alert(\"Choose a value for every setting first.\");s[0].scrollIntoView();setTimeout(function(){for(var e=0;e<s.length;e++){new Effect.Highlight(s[e],{endcolor:\"#7CCD7C\"})}},500)}return null}return r}function toQueryString(e){return e.map(function(e){return e[0]+\"=\"+encodeURIComponent(e[1])}).join(\"&\")}" // from site's JS.
-								+ "s.addEventListener('click', function() {" 
-								/******/+ "this.innerHTML='"+getString(R.string.installing)+"...';"
-								///******/+ "dolphinStylish.invoke(0,JSON.stringify({" //for IJavascriptInterface
-								/******/+ "document.title = JSON.stringify({"
-								/***********/+ "homepage:location.href,"
-								/***********/+ "name:document.querySelector('link[rel=alternate]').title," 
-								/***********/+ "url: document.querySelector('#style-id').innerHTML+'.css?'+toQueryString(getOptions(true))"
-								/******/+ "});"
-								+ "}, false);");
-						try {
-							JSONObject args = new JSONObject(webView.getTitle());							
-							installStyleFromUrl(args.getString("homepage"), args.getString("name"), args.getString("url"));
+						if (webView.getTitle().charAt(0) != SPECIAL_SYMBOL) {
+							oldTitle = webView.getTitle();						
+							webView.loadUrl("javascript:var s=document.createElement('div');"
+									+ "function instButtonAppend(){"
+									+ "var p=document.getElementById('main-style-info');"
+									+ "if (p) {"
+									+ "p.removeChild(document.getElementById('style-install-unknown'));"
+									+ "p.appendChild(s);} else setTimeout(instButtonAppend,300);}"
+									+ "instButtonAppend();"
+									+ "s.setAttribute('class','install-status install');"
+									+ "s.id='style-install-mobile-dolphin-android';"
+									+ "s.innerHTML='<span class=\"install-symbol\">+</span>"+getString(R.string.install)+"';"
+									+ "function getOptions(e){var t=document.getElementById(\"style-options\");if(!t){return[]}var n=t.getElementsByTagName(\"select\");var r=[];for(var i=0;i<n.length;i++){r.push([n[i].name,n[i].value])}var s=[];var o=t.querySelectorAll(\"input[type='text']\");for(var i=0;i<o.length;i++){if(o[i].value==\"\"){s.push(o[i])}else{r.push([o[i].name,o[i].value])}}o=t.querySelectorAll(\"input[type='radio']:checked\");for(var i=0;i<o.length;i++){switch(o[i].value){case\"user-url\":var u=o[i].name.split(\"-\");var a=\"option-user-url-\"+u[u.length-1];var f=document.getElementById(a);if(f.value==\"\"){s.push(f.parentNode)}else{r.push([o[i].name,f.value])}break;case\"user-upload\":var u=o[i].name.split(\"-\");var a=\"option-user-upload-\"+u[u.length-1];var f=document.getElementById(a);if(!f.uploadedData){s.push(f.parentNode)}else{r.push([o[i].name,f.uploadedData])}break;default:r.push([o[i].name,o[i].value]);break}}if(s.length>0){if(e){alert(\"Choose a value for every setting first.\");s[0].scrollIntoView();setTimeout(function(){for(var e=0;e<s.length;e++){new Effect.Highlight(s[e],{endcolor:\"#7CCD7C\"})}},500)}return null}return r}function toQueryString(e){return e.map(function(e){return e[0]+\"=\"+encodeURIComponent(e[1])}).join(\"&\")}" // from site's JS.
+									+ "s.addEventListener('click', function() {" 
+									/******/+ "this.innerHTML='"+getString(R.string.installing)+"...';"
+									///******/+ "dolphinStylish.invoke(0,JSON.stringify({" //for IJavascriptInterface
+									/******/+ "document.title = '"+SPECIAL_SYMBOL+"'+document.querySelector('link[rel=\"stylish-code-chrome\"]').href+'?'+toQueryString(getOptions(true));"
+									+ "}, false);");
+						} else {	// handler for "Install" click
+							installStyleFromUrl(webView.getTitle().substring(1));
 							webView.loadUrl("javascript:document.title=\""+oldTitle+"\";");
-						} catch (JSONException e) {
-							Log.e(LOG_TAG, e.toString());
 						}
 					}
 				} catch (RemoteException e) {
@@ -249,7 +244,10 @@ public class StylishAddonService extends AddonService {
 //			}
 //			return "";
 //		}
-	protected String installStyleFromString(String homepage, String styleName, String styleCode, String updateURL) { // Install style from string			
+	
+	/*	Install style from string
+		containing code in mozilla format	*/
+	protected String installStyleFromString(String homepage, String styleName, String styleCode, String updateURL) {
 		String filename = styleName2fileName(styleName);
 		/* blocks - it is parts of the code, that are applied by different rules. It stored in separate files. */
 		String[] blocks = styleCode.replaceAll("@namespace[^;]+;", "").split(Pattern.quote("@-moz-document")); //we don't support namespaces yet 
@@ -357,25 +355,133 @@ public class StylishAddonService extends AddonService {
 		return (is_moz_doc ? "S" : "GLOBAL s" )+"tyle \""+styleName+"\" installed!";		
 	}
 	
-	protected void installStyleFromUrl(final String homepage, final String styleName, final String installUrl) { // Download style from internet
+	protected String installStyleFromObject(JSONObject userstyle) {
+		String styleName = userstyle.optString("name"); 
+		String filename = styleName2fileName(styleName);
+		JSONArray sections = userstyle.optJSONArray("sections");		
+		try { //delete style, if exists
+			deleteStyle(styleName);
+		} catch (RemoteException e) {
+			Log.e(LOG_TAG, e.toString());
+		}
+		//Common values for all blocks of style
+		ContentValues values = new ContentValues();
+		values.put(StylesTable.COLUMN_NAME_URL, userstyle.optString("url"));
+		values.put(StylesTable.COLUMN_NAME_NAME, styleName);	
+		values.put(StylesTable.COLUMN_NAME_ENABLED, 1);
+		values.put(StylesTable.COLUMN_NAME_UPDATE, userstyle.optString("updateUrl"));
+		SQLiteDatabase db = sbHelper.getWritableDatabase();
+		
+		HashMap<String, String> moz_doc2json_types = new HashMap<String, String>();
+		moz_doc2json_types.put("domain",	"domains");
+		moz_doc2json_types.put("url",		"urls");
+		moz_doc2json_types.put("url-prefix","urlPrefixes");
+		moz_doc2json_types.put("regexp",	"regexps");
+		
+		boolean is_global = true;
+		
+		// for every section of style:
+		for (int i=0; i<sections.length(); i++) {
+			JSONObject section = sections.optJSONObject(i);
+			// Save code to file
+			File file = new File(context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), filename+i+ ".css");
+			FileWriter writer = null;
+			try {
+				writer = new FileWriter(file);
+				writer.append(section.optString("code"));
+				writer.flush();
+				writer.close();
+			} catch (IOException e) {
+				Log.e(LOG_TAG, e.toString());
+				return getString(R.string.trouble); 
+			}
+			// Record info about block to DB			
+			values.put(StylesTable.COLUMN_NAME_FILENAME, filename+i);
+			long newRowId = db.insert(StylesTable.TABLE_NAME, null, values);
+			values.remove(StylesTable.COLUMN_NAME_FILENAME);
+			// Save rules to DB	
+			ContentValues metaValues = new ContentValues();
+			metaValues.put(RulesTable.COLUMN_NAME_STYLE_ID, newRowId);
+			// for every rule type:
+			for (String moz_doc_rule_type : moz_doc2json_types.keySet()) {
+				JSONArray rules = section.optJSONArray(moz_doc2json_types.get(moz_doc_rule_type));
+				metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get(moz_doc_rule_type));
+				// for every rule: 
+				for (int j=0;j<rules.length();j++) {
+					String ruleText = rules.optString(j);
+			    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, ruleText); 			    
+			    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
+			    	metaValues.remove(RulesTable.COLUMN_NAME_RULE_TEXT);
+			    	try { // inject block to all opened and matched tabs
+						for (int tab_id : browser.tabs.getAllTabIds()) {
+							IWebView webview = browser.tabs.get(tab_id).getWebView();
+							if (currentStyles.get(webview.getId()) != null) {
+								String href = webview.getUrl();
+								if (href != null) {
+									String domain = href2domain(href);
+									boolean inject;
+									switch (rulesTypes.get(moz_doc_rule_type)) {
+										case 0: inject = domain.endsWith(ruleText); break;
+										case 1: inject = href.equals(ruleText); break;
+										case 2: inject = href.startsWith(ruleText); break;
+										case 3: inject = Pattern.matches(ruleText, href); break;
+										default: inject = false;
+									}
+									if (inject) {
+										injectCSS(webview, filename+i);
+										currentStyles.get(webview.getId()).put(styleName, true);
+									}
+								}
+							}
+						}
+					} catch (RemoteException e) {
+						Log.e(LOG_TAG, e.toString());
+					}
+			    	is_global = false;
+				}
+				metaValues.remove(RulesTable.COLUMN_NAME_RULE_TYPE);
+			}
+			if (is_global) {	
+		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get("url-prefix"));	
+		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, "");
+		    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
+		    	try { // inject block to all opened tabs
+					for (int tab_id : browser.tabs.getAllTabIds()) {
+						IWebView webview = browser.tabs.get(tab_id).getWebView();
+						if (currentStyles.get(webview.getId()) != null) {
+							injectCSS(webview, filename+i);
+							currentStyles.get(webview.getId()).put(styleName, true);
+						}
+					}
+				} catch (RemoteException e) {
+					Log.e(LOG_TAG, e.toString());
+				}
+		    }
+		}
+		db.close();
+		return (!is_global ? "S" : "GLOBAL s" )+"tyle \""+styleName+"\" installed!";
+	}
+
+	protected void installStyleFromUrl(final String installUrl) { // Download style from internet
 		new Thread(new Runnable() {
 			public void run() {
 				String msg = null;
 				if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) { // if sdcard writable
 					String line;
-					StringBuilder code = new StringBuilder();
+					StringBuilder jsonResponse = new StringBuilder();
 					try {
-						URL url = new URL("https://userstyles.org/styles/" + installUrl);
+						URL url = new URL(installUrl);
 						// Read all the text returned by the server
 						InputStreamReader is = new InputStreamReader(url.openStream());
 						BufferedReader in = new BufferedReader(is);
 						while ((line = in.readLine()) != null) {
-							code.append(line);
-							code.append(System.getProperty("line.separator"));
+							jsonResponse.append(line);
+							jsonResponse.append(System.getProperty("line.separator"));
 						}				         							
 						in.close();
 						is.close();					
-						msg = installStyleFromString(homepage, styleName, code.toString(), installUrl);
+						JSONObject userstyle = new JSONObject(jsonResponse.toString());						
+						msg = installStyleFromObject(userstyle);
 					} catch (Exception e) {
 						Log.e(LOG_TAG, e.toString());
 						msg = getString(R.string.problemwhiledownloading);
