@@ -86,7 +86,7 @@ public class StylishAddonService extends AddonService {
 	}
 	
 	@Override
-	protected void onBrowserDisconnected(Browser browser) {		
+	protected void onBrowserDisconnected(Browser browser) {
 	}
 	
 	private OnClickListener mClickListener = new OnClickListener() { // click on addon icon: show menu
@@ -157,7 +157,7 @@ public class StylishAddonService extends AddonService {
 								}
 								currentStyles.get(webView.getId()).put(cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_NAME)), enabled);					
 							 }
-						} while (cursor.moveToNext());						
+						} while (cursor.moveToNext());
 					}
 // for "active styles count in add-on name" feature. Doesn't work correct because there isn't "Tab changed" listener.
 //					if (count > 0) browser.addonBarAction.setTitle(getString(R.string.app_name)+" ("+count+")");
@@ -165,11 +165,11 @@ public class StylishAddonService extends AddonService {
 					cursor.close();
 					db.close();
 	
-					///////// add "Install" button			
+					///////// add "Install" button
 					final char SPECIAL_SYMBOL = '{';
 					if (Pattern.matches("https?://userstyles\\.org/styles/\\d+\\S*",href)){
 						if (webView.getTitle().charAt(0) != SPECIAL_SYMBOL) {
-							oldTitle = webView.getTitle();						
+							oldTitle = webView.getTitle();
 							webView.loadUrl("javascript:var s=document.createElement('div');"
 									+ "function instButtonAppend(){"
 									+ "var p=document.getElementById('main-style-info');"
@@ -251,7 +251,7 @@ public class StylishAddonService extends AddonService {
 		String filename = styleName2fileName(styleName);
 		/* blocks - it is parts of the code, that are applied by different rules. It stored in separate files. */
 		String[] blocks = styleCode.replaceAll("@namespace[^;]+;", "").split(Pattern.quote("@-moz-document")); //we don't support namespaces yet 
-		boolean is_moz_doc = blocks.length > 1; // if false, it is global style.				
+		boolean is_moz_doc = blocks.length > 1; // if false, it is global style.
 		try { //delete style, if exists
 			deleteStyle(styleName);
 		} catch (RemoteException e1) {
@@ -260,10 +260,10 @@ public class StylishAddonService extends AddonService {
 		//Common values for all blocks of style
 		ContentValues values = new ContentValues();
 		values.put(StylesTable.COLUMN_NAME_URL, homepage);
-		values.put(StylesTable.COLUMN_NAME_NAME, styleName);	
+		values.put(StylesTable.COLUMN_NAME_NAME, styleName);
 		values.put(StylesTable.COLUMN_NAME_ENABLED, 1);
 		values.put(StylesTable.COLUMN_NAME_UPDATE, updateURL);
-		SQLiteDatabase db = sbHelper.getWritableDatabase();			
+		SQLiteDatabase db = sbHelper.getWritableDatabase();
 		// for every block of style:
 		for (int i=(is_moz_doc ? 1 : 0); i<blocks.length; i++) {
 			String[] rulesAndCode = null;
@@ -285,7 +285,7 @@ public class StylishAddonService extends AddonService {
 				Log.e(LOG_TAG, e.toString());
 				return getString(R.string.trouble); 
 			}
-			// Record info about block to DB			
+			// Record info about block to DB
 			values.put(StylesTable.COLUMN_NAME_FILENAME, filename+i);
 			long newRowId = db.insert(StylesTable.TABLE_NAME, null, values);
 			values.remove(StylesTable.COLUMN_NAME_FILENAME);
@@ -307,7 +307,7 @@ public class StylishAddonService extends AddonService {
 			    	metaValues.put(RulesTable.COLUMN_NAME_STYLE_ID, newRowId);
 			    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
 			    	try { // inject block to all opened and matched tabs
-						for (int tab_id : browser.tabs.getAllTabIds()) {							
+						for (int tab_id : browser.tabs.getAllTabIds()) {
 							IWebView webview = browser.tabs.get(tab_id).getWebView();
 							if (currentStyles.get(webview.getId()) != null) {
 								String href = webview.getUrl();
@@ -330,15 +330,15 @@ public class StylishAddonService extends AddonService {
 						}
 					} catch (RemoteException e) {
 						Log.e(LOG_TAG, e.toString());
-					}		
+					}
 				}
-		    } else { // if it is global style
-		    	ContentValues metaValues = new ContentValues();		
-		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get("url-prefix"));	
-		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, "");
-		    	metaValues.put(RulesTable.COLUMN_NAME_STYLE_ID, newRowId);
-		    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
-		    	try { // inject block to all opened tabs
+			} else { // if it is global style
+				ContentValues metaValues = new ContentValues();		
+				metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get("url-prefix"));	
+				metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, "");
+				metaValues.put(RulesTable.COLUMN_NAME_STYLE_ID, newRowId);
+				db.insert(RulesTable.TABLE_NAME, null, metaValues);
+				try { // inject block to all opened tabs
 					for (int tab_id : browser.tabs.getAllTabIds()) {
 						IWebView webview = browser.tabs.get(tab_id).getWebView();
 						if (currentStyles.get(webview.getId()) != null) {
@@ -349,16 +349,16 @@ public class StylishAddonService extends AddonService {
 				} catch (RemoteException e) {
 					Log.e(LOG_TAG, e.toString());
 				}
-		    }
+			}
 		}
 		db.close();
-		return (is_moz_doc ? "S" : "GLOBAL s" )+"tyle \""+styleName+"\" installed!";		
+		return (is_moz_doc ? "S" : "GLOBAL s" )+"tyle \""+styleName+"\" installed!";
 	}
 	
 	protected String installStyleFromObject(JSONObject userstyle) {
 		String styleName = userstyle.optString("name"); 
 		String filename = styleName2fileName(styleName);
-		JSONArray sections = userstyle.optJSONArray("sections");		
+		JSONArray sections = userstyle.optJSONArray("sections");
 		try { //delete style, if exists
 			deleteStyle(styleName);
 		} catch (RemoteException e) {
@@ -367,7 +367,7 @@ public class StylishAddonService extends AddonService {
 		//Common values for all blocks of style
 		ContentValues values = new ContentValues();
 		values.put(StylesTable.COLUMN_NAME_URL, userstyle.optString("url"));
-		values.put(StylesTable.COLUMN_NAME_NAME, styleName);	
+		values.put(StylesTable.COLUMN_NAME_NAME, styleName);
 		values.put(StylesTable.COLUMN_NAME_ENABLED, 1);
 		values.put(StylesTable.COLUMN_NAME_UPDATE, userstyle.optString("updateUrl"));
 		SQLiteDatabase db = sbHelper.getWritableDatabase();
@@ -395,7 +395,7 @@ public class StylishAddonService extends AddonService {
 				Log.e(LOG_TAG, e.toString());
 				return getString(R.string.trouble); 
 			}
-			// Record info about block to DB			
+			// Record info about block to DB
 			values.put(StylesTable.COLUMN_NAME_FILENAME, filename+i);
 			long newRowId = db.insert(StylesTable.TABLE_NAME, null, values);
 			values.remove(StylesTable.COLUMN_NAME_FILENAME);
@@ -409,10 +409,10 @@ public class StylishAddonService extends AddonService {
 				// for every rule: 
 				for (int j=0;j<rules.length();j++) {
 					String ruleText = rules.optString(j);
-			    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, ruleText); 			    
-			    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
-			    	metaValues.remove(RulesTable.COLUMN_NAME_RULE_TEXT);
-			    	try { // inject block to all opened and matched tabs
+					metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, ruleText);
+					db.insert(RulesTable.TABLE_NAME, null, metaValues);
+					metaValues.remove(RulesTable.COLUMN_NAME_RULE_TEXT);
+					try { // inject block to all opened and matched tabs
 						for (int tab_id : browser.tabs.getAllTabIds()) {
 							IWebView webview = browser.tabs.get(tab_id).getWebView();
 							if (currentStyles.get(webview.getId()) != null) {
@@ -437,15 +437,15 @@ public class StylishAddonService extends AddonService {
 					} catch (RemoteException e) {
 						Log.e(LOG_TAG, e.toString());
 					}
-			    	is_global = false;
+					is_global = false;
 				}
 				metaValues.remove(RulesTable.COLUMN_NAME_RULE_TYPE);
 			}
 			if (is_global) {	
-		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get("url-prefix"));	
-		    	metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, "");
-		    	db.insert(RulesTable.TABLE_NAME, null, metaValues);
-		    	try { // inject block to all opened tabs
+				metaValues.put(RulesTable.COLUMN_NAME_RULE_TYPE, rulesTypes.get("url-prefix"));	
+				metaValues.put(RulesTable.COLUMN_NAME_RULE_TEXT, "");
+				db.insert(RulesTable.TABLE_NAME, null, metaValues);
+				try { // inject block to all opened tabs
 					for (int tab_id : browser.tabs.getAllTabIds()) {
 						IWebView webview = browser.tabs.get(tab_id).getWebView();
 						if (currentStyles.get(webview.getId()) != null) {
@@ -477,15 +477,15 @@ public class StylishAddonService extends AddonService {
 						while ((line = in.readLine()) != null) {
 							jsonResponse.append(line);
 							jsonResponse.append(System.getProperty("line.separator"));
-						}				         							
+						}
 						in.close();
-						is.close();					
-						JSONObject userstyle = new JSONObject(jsonResponse.toString());						
+						is.close();
+						JSONObject userstyle = new JSONObject(jsonResponse.toString());
 						msg = installStyleFromObject(userstyle);
 					} catch (Exception e) {
 						Log.e(LOG_TAG, e.toString());
 						msg = getString(R.string.problemwhiledownloading);
-					}					
+					}
 				} else
 					msg = getString(R.string.insertsd);
 				try {
@@ -499,11 +499,11 @@ public class StylishAddonService extends AddonService {
 	}	
 
 	private void onOffStyleInAllTabs(String styleName, Boolean enabled) throws RemoteException, IllegalArgumentException {
-		SQLiteDatabase db = sbHelper.getReadableDatabase();		
+		SQLiteDatabase db = sbHelper.getReadableDatabase();
 		int[] getalltabs = browser.tabs.getAllTabIds();
 		if (getalltabs != null)
 			for (int tab_id : getalltabs) {
-				IWebView webview = browser.tabs.get(tab_id).getWebView();					
+				IWebView webview = browser.tabs.get(tab_id).getWebView();
 				HashMap<String, Boolean> s = currentStyles.get(webview.getId());
 				if (s != null && s.containsKey(styleName)) { // if this style affects current page
 					// 1. Load/Unload CSS
@@ -517,23 +517,23 @@ public class StylishAddonService extends AddonService {
 							null
 							);
 						if (cursor.moveToFirst()) {
-							do injectCSS(webview, cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME)));							
-							while (cursor.moveToNext());						
+							do injectCSS(webview, cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME)));
+							while (cursor.moveToNext());
 						}
 						cursor.close();
 					}
 					else removeCSS(webview, styleName2fileName(styleName));
-					// 2. Correct currentStyles		
+					// 2. Correct currentStyles
 					s.put(styleName, enabled);
 					
 					// 3. Correct addonbar (for "active styles count in add-on name" feature)
 		//			int count = 0;
 		//			for (Boolean k : s.values()) if (k) count++;
 		//			if (count > 0) browser.addonBarAction.setTitle(getString(R.string.app_name)+" ("+count+")");
-		//			else browser.addonBarAction.setTitle(getString(R.string.app_name));			
+		//			else browser.addonBarAction.setTitle(getString(R.string.app_name));
 				}
 			}
-		db.close();		
+		db.close();
 	}
 	
 	protected void setStyleState(String style, Boolean enabled) throws RemoteException {
@@ -579,15 +579,15 @@ public class StylishAddonService extends AddonService {
 	}
 
 	protected void switchStateAllStyles() throws RemoteException {
-		AddonEnabled = !AddonEnabled;		
+		AddonEnabled = !AddonEnabled;
 		if (currentStyles != null) {		// apply changes to current tab
 			IWebView webView = browser.tabs.getCurrent().getWebView();
 			HashMap<String, Boolean> cStyles = currentStyles.get(webView.getId());
-			for (final String style : cStyles.keySet())				
+			for (final String style : cStyles.keySet())
 				if (cStyles.get(style)) // for all enabled styles on current page, inject or remove css
 					for (int i=0;i<10;i++)
 						if (AddonEnabled) injectCSS(webView, style+i);
 						else removeCSS(webView, styleName2fileName(style));
-		}			
+		}
 	}
 }

@@ -82,8 +82,8 @@ public class StyleManager extends Activity {
 				LinearLayout.LayoutParams titleAndDescParams = new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT);
 				//experimental//LinearLayout.LayoutParams titleAndDescParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 				titleAndDesc.setOrientation(LinearLayout.VERTICAL);
-				titleAndDesc.setLayoutParams(titleAndDescParams);			
-				titleAndDescParams.weight = 1;				
+				titleAndDesc.setLayoutParams(titleAndDescParams);
+				titleAndDescParams.weight = 1;
 				titleAndDesc.addView(title);
 				titleAndDesc.addView(description);
 				
@@ -120,8 +120,8 @@ public class StyleManager extends Activity {
 						intent.putExtra(StyleEditor.EXTRA_STYLE_NAME, name);
 						intent.putExtra(StyleEditor.EXTRA_STYLE_HOMEPAGE, homepage);
 						intent.putExtra(StyleEditor.EXTRA_STYLE_UPDATE, updateURL);
-						startActivity (intent);			
-					}					
+						startActivity (intent);
+					}
 				});
 				
 				Button btnUpdate = new Button(this);
@@ -135,7 +135,7 @@ public class StyleManager extends Activity {
 							StylishAddon.installStyleFromUrl(updateURL);
 							title.setTextColor(android.graphics.Color.GREEN);
 						}
-					}					
+					}
 				});
 				
 				ToggleButton btnOnOff = new ToggleButton(this);
@@ -152,8 +152,8 @@ public class StyleManager extends Activity {
 							title.setTextColor(((ToggleButton)v).isChecked() ? android.graphics.Color.WHITE : android.graphics.Color.GRAY);
 						} catch (RemoteException e) {
 							Log.e(LOG_TAG, e.toString());
-						}						
-					}					
+						}
+					}
 				});
 
 				Button btnDelete = new Button(this);

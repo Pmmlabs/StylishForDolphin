@@ -67,7 +67,7 @@ public class StylishDialog extends Activity {
 		((Button)findViewById(R.id.btnCreate)).setText(((Button)findViewById(R.id.btnCreate)).getText()+" "+curDomain);
 		//
 		
-		if (currentStyles != null) 
+		if (currentStyles != null)
 			for (final String style : currentStyles.keySet())
 			{
 				CheckBox cbx = new CheckBox(this);
@@ -135,7 +135,7 @@ public class StylishDialog extends Activity {
 				intent.putExtra(StyleEditor.EXTRA_STYLE_NAME, curDomain);
 				intent.putExtra(StyleEditor.EXTRA_STYLE_HOMEPAGE, "");
 				intent.putExtra(StyleEditor.EXTRA_STYLE_UPDATE, "");
-				startActivity (intent);					
+				startActivity (intent);
 			}
 		});
 	}

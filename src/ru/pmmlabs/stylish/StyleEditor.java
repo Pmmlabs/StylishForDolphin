@@ -77,8 +77,8 @@ public class StyleEditor extends Activity {
 					new String[] { styleName }, StylesTable.COLUMN_NAME_FILENAME, null, null);
 			if (cursor.moveToFirst()) {
 				do {
-				    StringBuilder contents = new StringBuilder();			    
-				    try {			     
+				    StringBuilder contents = new StringBuilder();
+				    try {
 				      BufferedReader input =  new BufferedReader(new FileReader(
 				    		  StylishAddon.context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS).toString()
 				    		  +"/"+cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME))+ ".css"));
@@ -107,22 +107,22 @@ public class StyleEditor extends Activity {
 			db.close();
 		}
 		
-		findViewById(R.id.btnCancel).setOnClickListener(new OnClickListener() { // click to "Cancel" button			
+		findViewById(R.id.btnCancel).setOnClickListener(new OnClickListener() { // click to "Cancel" button
 			@Override
 			public void onClick(View arg0) {
-				finish();					
+				finish();
 			}
 		});
 
-		findViewById(R.id.btnSave).setOnClickListener(new OnClickListener() { // click to "Save" button				
+		findViewById(R.id.btnSave).setOnClickListener(new OnClickListener() { // click to "Save" button
 			@Override
 			public void onClick(View arg0) {
 				StylishAddon.installStyleFromString(homepage, styleName, edCode.getText().toString(), updateURL);
-				finish();					
+				finish();
 			}
 		});
 		
-		findViewById(R.id.toggleFind).setOnClickListener(new OnClickListener() { // click to "Find" button				
+		findViewById(R.id.toggleFind).setOnClickListener(new OnClickListener() { // click to "Find" button
 			@Override
 			public void onClick(View v) {
 				if (((ToggleButton)v).isChecked()) {
@@ -134,7 +134,7 @@ public class StyleEditor extends Activity {
 			}
 		});
 		
-		findViewById(R.id.btnNext).setOnClickListener(new OnClickListener() { // click to "Next" button				
+		findViewById(R.id.btnNext).setOnClickListener(new OnClickListener() { // click to "Next" button
 			@Override
 			public void onClick(View v) {
 				String target = ((EditText)findViewById(R.id.edFind)).getText().toString();
@@ -156,7 +156,7 @@ public class StyleEditor extends Activity {
 			}
 		});
 		
-		findViewById(R.id.btnPrev).setOnClickListener(new OnClickListener() { // click to "Prev" button				
+		findViewById(R.id.btnPrev).setOnClickListener(new OnClickListener() { // click to "Prev" button
 			@Override
 			public void onClick(View v) {
 				String target = ((EditText)findViewById(R.id.edFind)).getText().toString();
@@ -168,13 +168,13 @@ public class StyleEditor extends Activity {
 							Toast.makeText(StyleEditor.this, "not found", Toast.LENGTH_SHORT).show();
 							return;
 						}
-						Toast.makeText(StyleEditor.this, "top of page reached, continued from the bottom", Toast.LENGTH_SHORT).show();										
+						Toast.makeText(StyleEditor.this, "top of page reached, continued from the bottom", Toast.LENGTH_SHORT).show();
 					}
 					edCode.requestFocus();
 					edCode.setSelection(index);
 				}
 				else 
-					Toast.makeText(StyleEditor.this, "text is empty", Toast.LENGTH_SHORT).show();								
+					Toast.makeText(StyleEditor.this, "text is empty", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
