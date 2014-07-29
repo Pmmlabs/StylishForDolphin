@@ -581,14 +581,31 @@ public class StylishAddonService extends AddonService {
 
 	protected void switchStateAllStyles() throws RemoteException {
 		AddonEnabled = !AddonEnabled;
-		if (currentStyles != null) {		// apply changes to current tab
-			IWebView webView = browser.tabs.getCurrent().getWebView();
-			HashMap<String, Boolean> cStyles = currentStyles.get(webView.getId());
-			for (final String style : cStyles.keySet())
-				if (cStyles.get(style)) // for all enabled styles on current page, inject or remove css
-					for (int i=0;i<10;i++)
-						if (AddonEnabled) injectCSS(webView, style+i);
-						else removeCSS(webView, styleName2fileName(style));
-		}
+		
+		SQLiteDatabase db = sbHelper.getReadableDatabase();
+		int[] getalltabs = browser.tabs.getAllTabIds();
+		if (getalltabs != null && currentStyles != null)
+			for (int tab_id : getalltabs) {							// for every tab
+				IWebView webview = browser.tabs.get(tab_id).getWebView();
+				HashMap<String, Boolean> tabStyles = currentStyles.get(webview.getId());
+				if (tabStyles != null)
+					for (final String style : tabStyles.keySet())	//for every style in tab
+						if (AddonEnabled) {
+							Cursor cursor = db.query(StylesTable.TABLE_NAME, 
+									new String[] { StylesTable.COLUMN_NAME_FILENAME }, // The columns to return
+									StylesTable.COLUMN_NAME_NAME + " = ?",
+									new String[] {style},
+									null,
+									null,
+									null
+									);
+							if (cursor.moveToFirst()) {
+								do injectCSS(webview, cursor.getString(cursor.getColumnIndexOrThrow(StylesTable.COLUMN_NAME_FILENAME)));
+								while (cursor.moveToNext());
+							}
+							cursor.close();
+						}
+						else removeCSS(webview, styleName2fileName(style));
+			}				
 	}
 }
