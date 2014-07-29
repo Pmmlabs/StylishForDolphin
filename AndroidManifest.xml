@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="ru.pmmlabs.stylish"
-    android:versionCode="3"
-    android:versionName="1.1" xmlns:android="http://schemas.android.com/apk/res/android">
+    android:versionCode="4"
+    android:versionName="1.2" xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19"/>
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="20"/>
     <uses-permission android:name="com.dolphin.browser.permission.ACCESS_WEB_PAGES"/>
     <uses-permission android:name="com.dolphin.browser.permission.RUN_JAVASCRIPT"/>
     <uses-permission android:name="com.dolphin.browser.permission.MANAGE_TABS"/>
