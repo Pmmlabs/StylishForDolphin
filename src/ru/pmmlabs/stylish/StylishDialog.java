@@ -63,8 +63,23 @@ public class StylishDialog extends Activity {
 		} catch (RemoteException e) {
 			Log.e(LOG_TAG , e.toString());
 		}
-		final String curDomain = StylishAddon.href2domain(curUrl);
-		((Button)findViewById(R.id.btnCreate)).setText(((Button)findViewById(R.id.btnCreate)).getText()+" "+curDomain);
+		if (curUrl != null) { // if current page is "new tab", disable "create style" button
+			final String curDomain = StylishAddon.href2domain(curUrl);
+			((Button)findViewById(R.id.btnCreate)).setText(((Button)findViewById(R.id.btnCreate)).getText()+" "+curDomain);
+			findViewById(R.id.btnCreate).setOnClickListener(new View.OnClickListener() { // Click on "Create style"
+
+				@Override
+				public void onClick(View arg0) {
+					Intent intent = new Intent(StylishDialog.this, StyleEditor.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					intent.putExtra(StyleEditor.EXTRA_STYLE_NAME, curDomain);
+					intent.putExtra(StyleEditor.EXTRA_STYLE_HOMEPAGE, "");
+					intent.putExtra(StyleEditor.EXTRA_STYLE_UPDATE, "");
+					startActivity (intent);
+				}
+			});
+		} else
+			findViewById(R.id.btnCreate).setEnabled(false);
 		//
 		
 		if (currentStyles != null)
@@ -123,19 +138,6 @@ public class StylishDialog extends Activity {
 					Log.e(LOG_TAG, e.toString());
 				}
 				finish();
-			}
-		});
-		
-		findViewById(R.id.btnCreate).setOnClickListener(new View.OnClickListener() { // Click on "Create style"
-			
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(StylishDialog.this, StyleEditor.class);
-				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intent.putExtra(StyleEditor.EXTRA_STYLE_NAME, curDomain);
-				intent.putExtra(StyleEditor.EXTRA_STYLE_HOMEPAGE, "");
-				intent.putExtra(StyleEditor.EXTRA_STYLE_UPDATE, "");
-				startActivity (intent);
 			}
 		});
 	}
