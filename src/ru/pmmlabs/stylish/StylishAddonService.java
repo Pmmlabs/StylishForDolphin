@@ -482,7 +482,7 @@ public class StylishAddonService extends AddonService {
 						is.close();
 						JSONObject userstyle = new JSONObject(jsonResponse.toString());
 						msg = installStyleFromObject(userstyle);
-						new URL(installUrl.replaceFirst("chrome/(\\d+)\\.json\\S*", "install/$1?source=stylish-do")).openStream();
+						new URL(installUrl.replaceFirst("chrome/(\\d+)\\.json\\S*", "install/$1?source=stylish-do")).openStream().close();
 					} catch (Exception e) {
 						Log.e(LOG_TAG, e.toString());
 						msg = getString(R.string.problemwhiledownloading);
