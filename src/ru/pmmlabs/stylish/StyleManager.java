@@ -41,8 +41,8 @@ public class StyleManager extends Activity {
 		setTheme(android.R.style.Theme_Holo);
 		setContentView(R.layout.manager);
 		setTitle(getString(R.string.managestyles));
-		final LinearLayout general = (LinearLayout) findViewById(R.id.general);
-
+		boolean landscape_mode = findViewById(R.id.manager_land) != null;
+		final LinearLayout general = (LinearLayout) (landscape_mode ? findViewById(R.id.manager_land) : findViewById(R.id.manager_port));
 		final StylishAddonService StylishAddon = StylishAddonService.getInstance();
 		Map<String, Integer> rTypes = StylishAddon.rulesTypes;
 		SQLiteDatabase db = StylishAddon.sbHelper.getReadableDatabase();
@@ -68,7 +68,7 @@ public class StyleManager extends Activity {
 				final TextView title = new TextView(this);
 				title.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
 				title.setText(name);
-				title.setTextAppearance(this, android.R.style.TextAppearance_Large);
+				title.setTextAppearance(this, (landscape_mode ? android.R.style.TextAppearance_DeviceDefault_Large : android.R.style.TextAppearance_DeviceDefault_Medium));
 				if (!enabled) title.setTextColor(android.graphics.Color.GRAY);
 
 				TextView description = new TextView(this);
@@ -91,7 +91,7 @@ public class StyleManager extends Activity {
 					
 					@Override
 					public void onClick(View v) {
-						if (homepage != "")
+						if (!homepage.equals(""))
 						try {
 							StylishAddon.browser.tabs.create(homepage, false);
 						} catch (RemoteException e) {
@@ -110,7 +110,12 @@ public class StyleManager extends Activity {
 				
 				Button btnEdit = new Button(this);
 				btnEdit.setLayoutParams(buttonParams);
-				btnEdit.setText(getString(R.string.edit));
+				if (landscape_mode)
+					btnEdit.setText(getString(R.string.edit));
+				else {
+					btnEdit.setText("");
+					btnEdit.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_edit, 0, 0, 0);
+				}
 				btnEdit.setOnClickListener(new OnClickListener() { // edit style
 
 					@Override
@@ -126,7 +131,12 @@ public class StyleManager extends Activity {
 				
 				Button btnUpdate = new Button(this);
 				btnUpdate.setLayoutParams(buttonParams);
-				btnUpdate.setText(getString(R.string.update));
+				if (landscape_mode)
+					btnUpdate.setText(getString(R.string.update));
+				else {
+					btnUpdate.setText("");
+					btnUpdate.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_popup_sync, 0, 0, 0);
+				}
 				btnUpdate.setOnClickListener(new OnClickListener() { // update style
 
 					@Override
@@ -140,8 +150,10 @@ public class StyleManager extends Activity {
 				
 				ToggleButton btnOnOff = new ToggleButton(this);
 				btnOnOff.setLayoutParams(buttonParams);
-				btnOnOff.setTextOff(getString(R.string.enable));
-				btnOnOff.setTextOn(getString(R.string.disable));
+				btnOnOff.setTextOff((landscape_mode ? getString(R.string.enable) : ""));
+				btnOnOff.setTextOn((landscape_mode ? getString(R.string.disable) : ""));
+				if (!landscape_mode)
+					btnOnOff.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_lock_power_off, 0, 0, 0);				
 				btnOnOff.setChecked(enabled);
 				btnOnOff.setOnClickListener(new OnClickListener() { // enable or disable style
 
@@ -158,18 +170,39 @@ public class StyleManager extends Activity {
 
 				Button btnDelete = new Button(this);
 				btnDelete.setLayoutParams(buttonParams);
-				btnDelete.setText(getString(R.string.delete));
+				if (landscape_mode)
+					btnDelete.setText(getString(R.string.delete));
+				else {
+					btnDelete.setText("");
+					btnDelete.setCompoundDrawablesWithIntrinsicBounds(android.R.drawable.ic_menu_delete, 0, 0, 0);
+				}
 				
-
 				final LinearLayout L = new LinearLayout(this);
 				//experimental//final RelativeLayout L = new RelativeLayout(this);
 				L.setOrientation(LinearLayout.HORIZONTAL);
 				L.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
 				L.addView(titleAndDesc);
-				L.addView(btnEdit);
-				L.addView(btnUpdate);
-				L.addView(btnOnOff);
-				L.addView(btnDelete);
+				if (landscape_mode) {
+					L.addView(btnEdit);
+					L.addView(btnUpdate);
+					L.addView(btnOnOff);
+					L.addView(btnDelete);
+				} else {
+					LinearLayout Column1 = new LinearLayout(this);
+					Column1.setOrientation(LinearLayout.VERTICAL);
+					LinearLayout.LayoutParams ColParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+					Column1.setLayoutParams(ColParams);					
+					Column1.addView(btnEdit);
+					Column1.addView(btnUpdate);
+					
+					LinearLayout Column2 = new LinearLayout(this);
+					Column2.setOrientation(LinearLayout.VERTICAL);
+					Column2.setLayoutParams(ColParams);				
+					Column2.addView(btnOnOff);
+					Column2.addView(btnDelete);
+					L.addView(Column1);
+					L.addView(Column2);
+				}
 				general.addView(L);
 				btnDelete.setOnClickListener(new OnClickListener() { //delete style
 					
