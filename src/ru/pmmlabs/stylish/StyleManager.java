@@ -91,7 +91,11 @@ public class StyleManager extends Activity {
 					
 					@Override
 					public void onClick(View v) {
-						if (!homepage.equals(""))
+						if (homepage.equals(""))
+							Toast.makeText(getApplicationContext(), "This style has no homepage...", Toast.LENGTH_SHORT).show();
+						else if (homepage.equals("*newstyle*"))
+							Toast.makeText(getApplicationContext(), "This style is yours", Toast.LENGTH_SHORT).show();
+						else
 						try {
 							StylishAddon.browser.tabs.create(homepage, false);
 						} catch (RemoteException e) {
@@ -99,8 +103,6 @@ public class StyleManager extends Activity {
 						} catch (IllegalArgumentException e) {
 							Log.e(LOG_TAG, e.toString());
 						}
-						else
-							Toast.makeText(getApplicationContext(), "This style has no homepage..", Toast.LENGTH_SHORT).show();
 						finish();
 					}
 				});

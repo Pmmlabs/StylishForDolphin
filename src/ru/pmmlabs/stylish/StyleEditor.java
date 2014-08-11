@@ -117,7 +117,7 @@ public class StyleEditor extends Activity {
 		findViewById(R.id.btnSave).setOnClickListener(new OnClickListener() { // click to "Save" button
 			@Override
 			public void onClick(View arg0) {
-				StylishAddon.installStyleFromString(homepage, styleName, edCode.getText().toString(), updateURL);
+				StylishAddon.installStyleFromString(homepage.equals("") ? "*newstyle*" : homepage, styleName, edCode.getText().toString(), updateURL);
 				finish();
 			}
 		});
